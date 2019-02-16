@@ -23,8 +23,8 @@ var CanvasManager = {
         var y = 0;
         for(var i = 0; i < 7; i++) {
             for(var j = 0; j < 9; j++) {
-                this.context.strokeStyle = "black";
                 
+                // променяме цвета
                 if(i < 2 || i > 4) {
                     if(i % 2 == 0) {
                         if(j % 2 == 0) {
