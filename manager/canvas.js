@@ -2,7 +2,27 @@ var CanvasManager = {
     canvas: null,
     context: null,
 
+    // колекция с квадратите на игровото поле
     playgroundSquaresCollection: [],
+
+    // колекция с героите на играч A
+    heroesOfPlayerA: [],
+
+    // колекция с героите на играч B
+    heroesOfPlayerB: [],
+
+    // ред е на играч (1 или 2)
+    playerTurn: 1,
+
+    // сменя играча, който е на ход
+    changePlayerTurn: function() {
+        if(this.playerTurn == 1) {
+            this.playerTurn = 2;
+        } else
+        if(this.playerTurn == 2) {
+            this.playerTurn = 1;
+        }
+    },
 
     // Инициализира canvas-а
     init: function(element) {
@@ -11,6 +31,19 @@ var CanvasManager = {
 
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
+
+        this.initHeroes();
+    },
+
+    // Инициализира героите на всеки от играчите
+    initHeroes: function() {
+        this.heroesOfPlayerA.push(new Hero("knight", 8, 3, 15, 1, 1, 2));
+        this.heroesOfPlayerA.push(new Hero("elf", 5, 1, 10, 3, 3, 2));
+        this.heroesOfPlayerA.push(new Hero("dwarf", 6, 2, 12, 2, 2, 2));
+
+        this.heroesOfPlayerB.push(new Hero("knight", 8, 3, 15, 1, 1, 2));
+        this.heroesOfPlayerB.push(new Hero("elf", 5, 1, 10, 3, 3, 2));
+        this.heroesOfPlayerB.push(new Hero("dwarf", 6, 2, 12, 2, 2, 2));
     },
 
     // Обработва игровото поле (добавя квадратите към списъка с квадрати)
@@ -66,7 +99,6 @@ var CanvasManager = {
             y += squareWidth;
         }
 
-
         this.drawPlayground(); // изчертаваме игровото поле
     },
 
@@ -83,6 +115,8 @@ var CanvasManager = {
             }
         }
 
+        this.drawHeroPicker();
+
         // добавяме click listener
         this.canvas.addEventListener("click", function(e) {
             for(var i = 0; i<playgroundRows.length; i++) {
@@ -95,6 +129,57 @@ var CanvasManager = {
                     }
                 }
             }
+
+            var heroes = null;
+            if(CanvasManager.playerTurn == 1) {
+                heroes = CanvasManager.heroesOfPlayerA;
+            } else 
+            if(CanvasManager.playerTurn == 2) {
+                heroes = CanvasManager.heroesOfPlayerB;
+            }
+
+            for(var i = 0; i<heroes.length; i++) {
+                if(heroes[i].containsPoint(e.clientX, e.clientY)) {
+                    console.log(heroes[i].name)
+                }
+            }
         });
+    },
+
+    // Изчертава picker-а за герой
+    drawHeroPicker: function() {
+        var x = 700;
+        var y = 100;
+        var width = 80;
+        this.context.font = "30px Arial";
+
+        this.context.fillStyle = "black";
+        this.context.fillText("Player turn " + this.playerTurn, x, 50);
+
+        var heroes = null;
+
+        if(this.playerTurn == 1) {
+            heroes = this.heroesOfPlayerA;
+        } else 
+        if(this.playerTurn == 2) {
+            heroes = this.heroesOfPlayerB;
+        }
+
+        for(var i=0; i<heroes.length; i++) {
+            this.context.fillStyle = "white";
+            this.context.strokeRect(x, y, width, width);
+            this.context.fillRect(x, y, width, width);
+
+            // добавяме координати на героя, за да може после да изчислим дали е цъкнато върху него
+            heroes[i].x = x;
+            heroes[i].y = y;
+            heroes[i].width = width;
+
+            this.context.fillStyle = "black";
+            this.context.fillText(heroes[i].availableForPick, x, y+width-30); // изписваме бройката
+            this.context.fillText(heroes[i].name, x, y+width); // изписваме името
+
+            x += width + 10;
+        }
     },
 };
