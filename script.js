@@ -1,2 +1,2 @@
 CanvasManager.init("canvas");
-CanvasManager.drawPlayground();
+CanvasManager.processPlayground();
