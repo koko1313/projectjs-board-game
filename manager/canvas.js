@@ -82,5 +82,19 @@ var CanvasManager = {
                 square.draw();
             }
         }
+
+        // добавяме click listener
+        this.canvas.addEventListener("click", function(e) {
+            for(var i = 0; i<playgroundRows.length; i++) {
+                var row = playgroundRows[i];
+                for(var j=0; j<row.length; j++) {
+                    var square = playgroundRows[i][j];
+                    
+                    if(square.containsPoint(e.clientX, e.clientY)) {
+                        console.log(square.name);
+                    }
+                }
+            }
+        });
     },
 };
