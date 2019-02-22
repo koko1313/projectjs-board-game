@@ -4,10 +4,16 @@ var PlaygroundSquare = function(x, y, width, name, color) {
     this.width = width;
     this.name = name;
     this.color = color;
+    this.isAvailable = true;
 };
 
 PlaygroundSquare.prototype.draw = function() {
-    CanvasManager.context.fillStyle = this.color;
+    if(this.isAvailable) {
+        CanvasManager.context.fillStyle = this.color;
+    } else {
+        CanvasManager.context.fillStyle = "red";
+    }
+
     CanvasManager.context.strokeRect(this.x, this.y, this.width, this.width);
     CanvasManager.context.fillRect(this.x, this.y, this.width, this.width);
 };
@@ -25,10 +31,6 @@ PlaygroundSquare.prototype.containsPoint = function(clientX, clientY) {
         x: this.x,
         y: this.y + this.width,
     };
-    // var d = {
-    //     x: this.x + this.width,
-    //     y: this.y + this.width,
-    // };
 
     if(clientX > a.x && clientX < b.x && clientY > a.y && clientY < c.y) {
         return true;
